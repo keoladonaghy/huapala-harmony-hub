@@ -47,6 +47,21 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Hawaiian Theme Colors
+        ocean: {
+          deep: "hsl(var(--ocean-deep))",
+          light: "hsl(var(--ocean-light))",
+        },
+        coral: {
+          DEFAULT: "hsl(var(--coral))",
+          light: "hsl(var(--coral-light))",
+        },
+        tropical: {
+          DEFAULT: "hsl(var(--tropical))",
+          light: "hsl(var(--tropical-light))",
+        },
+        sand: "hsl(var(--sand))",
+        sunset: "hsl(var(--sunset))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

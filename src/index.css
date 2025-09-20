@@ -8,33 +8,57 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Hawaiian Ocean-inspired Design System */
+    --background: 210 20% 98%;
+    --foreground: 200 15% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 200 15% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 200 15% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Deep Ocean Blue Primary */
+    --primary: 200 85% 25%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Coral Secondary */
+    --secondary: 15 85% 92%;
+    --secondary-foreground: 15 85% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Soft Sand Muted */
+    --muted: 35 25% 95%;
+    --muted-foreground: 200 15% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Tropical Green Accent */
+    --accent: 160 60% 88%;
+    --accent-foreground: 160 60% 25%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 200 20% 90%;
+    --input: 200 20% 95%;
+    --ring: 200 85% 25%;
+
+    /* Custom Hawaiian Design Tokens */
+    --ocean-deep: 200 85% 25%;
+    --ocean-light: 200 60% 85%;
+    --coral: 15 85% 65%;
+    --coral-light: 15 85% 90%;
+    --tropical: 160 60% 45%;
+    --tropical-light: 160 60% 85%;
+    --sand: 35 25% 92%;
+    --sunset: 25 90% 70%;
+
+    /* Gradients */
+    --gradient-ocean: linear-gradient(135deg, hsl(var(--ocean-deep)), hsl(var(--primary)));
+    --gradient-sunset: linear-gradient(135deg, hsl(var(--coral)), hsl(var(--sunset)));
+    --gradient-tropical: linear-gradient(135deg, hsl(var(--tropical)), hsl(var(--tropical-light)));
+
+    /* Shadows */
+    --shadow-ocean: 0 10px 30px -10px hsl(var(--ocean-deep) / 0.3);
+    --shadow-soft: 0 4px 20px -4px hsl(var(--ocean-deep) / 0.1);
 
     --radius: 0.5rem;
 
@@ -56,33 +80,44 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark Ocean Theme */
+    --background: 200 30% 8%;
+    --foreground: 200 20% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 200 25% 12%;
+    --card-foreground: 200 20% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 200 25% 12%;
+    --popover-foreground: 200 20% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 200 70% 70%;
+    --primary-foreground: 200 30% 8%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 200 20% 18%;
+    --secondary-foreground: 200 20% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 200 20% 15%;
+    --muted-foreground: 200 15% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 160 40% 25%;
+    --accent-foreground: 160 60% 85%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 200 20% 20%;
+    --input: 200 20% 15%;
+    --ring: 200 70% 70%;
+
+    /* Dark Theme Custom Tokens */
+    --ocean-deep: 200 70% 70%;
+    --ocean-light: 200 50% 30%;
+    --coral: 15 70% 55%;
+    --coral-light: 15 60% 25%;
+    --tropical: 160 40% 35%;
+    --tropical-light: 160 40% 25%;
+    --sand: 35 15% 20%;
+    --sunset: 25 70% 50%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
