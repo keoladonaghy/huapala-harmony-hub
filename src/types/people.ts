@@ -37,6 +37,8 @@ export interface PersonFormData {
   full_name: string;
   display_name: string;
   place_of_birth: string;
+  places_of_hawaiian_influence: string;
+  primary_influence_location: string;
   hawaiian_speaker: boolean | null;
   birth_date: string;
   death_date: string;
@@ -48,5 +50,9 @@ export interface PersonFormData {
   active_period_start: string;
   active_period_end: string;
   notable_works: string;
+  awards_honors: string;
+  source_references_sources: string;
+  source_references_citations: string;
   verification_status: string;
+  last_verified_date: string;
 }
