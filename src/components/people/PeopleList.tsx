@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Person } from "@/types/people";
-import { mockPeople } from "@/data/mockPeople";
+import { realPeopleData } from "@/data/mockPeople";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,38 +9,35 @@ import { PersonFormModal } from "./PersonFormModal";
 import { Plus, Search, Edit2, Calendar, User } from "lucide-react";
 
 export function PeopleList() {
-  const [people, setPeople] = useState<Person[]>(mockPeople);
+  const [people, setPeople] = useState<Person[]>(realPeopleData);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPerson, setEditingPerson] = useState<Person | null>(null);
 
   const filteredPeople = people.filter(person =>
-    person.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    person.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    person.display_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     person.roles.some(role => role.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (person.aliases && person.aliases.some(alias => 
-      alias.toLowerCase().includes(searchTerm.toLowerCase())
-    ))
+    person.specialties.some(specialty => specialty.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (person.place_of_birth && person.place_of_birth.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (person.cultural_background && person.cultural_background.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  const handleAddPerson = (newPerson: Omit<Person, "id" | "createdAt" | "updatedAt">) => {
+  const handleAddPerson = (newPerson: Omit<Person, "person_id">) => {
     const person: Person = {
       ...newPerson,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      person_id: Date.now().toString(),
     };
     setPeople([...people, person]);
   };
 
-  const handleEditPerson = (updatedPerson: Omit<Person, "id" | "createdAt" | "updatedAt">) => {
+  const handleEditPerson = (updatedPerson: Omit<Person, "person_id">) => {
     if (editingPerson) {
       const person: Person = {
         ...updatedPerson,
-        id: editingPerson.id,
-        createdAt: editingPerson.createdAt,
-        updatedAt: new Date().toISOString()
+        person_id: editingPerson.person_id,
       };
-      setPeople(people.map(p => p.id === editingPerson.id ? person : p));
+      setPeople(people.map(p => p.person_id === editingPerson.person_id ? person : p));
       setEditingPerson(null);
     }
   };
@@ -85,14 +82,14 @@ export function PeopleList() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredPeople.map((person) => (
-          <Card key={person.id} className="hover:shadow-lg transition-shadow">
+          <Card key={person.person_id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
-                  <CardTitle className="text-lg">{person.name}</CardTitle>
-                  {person.aliases && person.aliases.length > 0 && (
+                  <CardTitle className="text-lg">{person.display_name}</CardTitle>
+                  {person.full_name !== person.display_name && (
                     <p className="text-sm text-muted-foreground">
-                      aka {person.aliases.join(", ")}
+                      {person.full_name}
                     </p>
                   )}
                 </div>
@@ -107,34 +104,72 @@ export function PeopleList() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex flex-wrap gap-1">
-                {person.roles.map((role) => (
+                <Badge variant="outline" className="text-xs font-medium">
+                  {person.primary_role}
+                </Badge>
+                {person.roles.filter(role => role !== person.primary_role).map((role) => (
                   <Badge key={role} variant="secondary" className="text-xs">
                     {role}
                   </Badge>
                 ))}
               </div>
               
-              {(person.birthDate || person.deathDate) && (
+              {person.specialties.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {person.specialties.map((specialty) => (
+                    <Badge key={specialty} variant="outline" className="text-xs bg-tropical-light/20 text-tropical border-tropical-light">
+                      {specialty.replace(/_/g, ' ')}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+              
+              {(person.birth_date || person.death_date) && (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="w-4 h-4" />
                   <span>
-                    {person.birthDate && formatDate(person.birthDate)}
-                    {person.birthDate && person.deathDate && " - "}
-                    {person.deathDate && formatDate(person.deathDate)}
+                    {person.birth_date}
+                    {person.birth_date && person.death_date && " - "}
+                    {person.death_date}
                   </span>
                 </div>
               )}
 
-              {person.biography && (
-                <p className="text-sm text-muted-foreground line-clamp-3">
-                  {person.biography}
-                </p>
+              {person.place_of_birth && (
+                <div className="text-sm text-muted-foreground">
+                  📍 {person.place_of_birth}
+                </div>
               )}
 
-              {person.notes && (
+              {person.cultural_background && (
+                <div className="text-sm">
+                  <Badge variant="outline" className="bg-coral-light/20 text-coral border-coral-light">
+                    {person.cultural_background}
+                  </Badge>
+                </div>
+              )}
+
+              {person.biographical_notes && (
+                <div className="text-sm text-muted-foreground line-clamp-3" 
+                     dangerouslySetInnerHTML={{ __html: person.biographical_notes }} />
+              )}
+
+              {person.notable_works.length > 0 && (
                 <div className="pt-2 border-t">
-                  <p className="text-xs text-muted-foreground italic">
-                    {person.notes}
+                  <p className="text-xs text-muted-foreground mb-1">Notable Works:</p>
+                  <p className="text-xs text-foreground">
+                    {person.notable_works.slice(0, 3).join(", ")}
+                    {person.notable_works.length > 3 && ` +${person.notable_works.length - 3} more`}
+                  </p>
+                </div>
+              )}
+
+              {person.awards_honors.length > 0 && (
+                <div className="pt-2 border-t">
+                  <p className="text-xs text-muted-foreground mb-1">Awards:</p>
+                  <p className="text-xs text-foreground">
+                    {person.awards_honors.slice(0, 2).map(award => award.name).join(", ")}
+                    {person.awards_honors.length > 2 && ` +${person.awards_honors.length - 2} more`}
                   </p>
                 </div>
               )}
