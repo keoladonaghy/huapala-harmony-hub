@@ -7,12 +7,12 @@ export interface MeleLine {
 }
 
 export interface MeleVerse {
-  id: string;
+  id?: string;
   type: "verse" | "chorus";
-  number: number;
+  number?: number;
   order: number;
-  label: string;
-  lines: MeleLine[];
+  label?: string;
+  lines?: MeleLine[];
   // Alternative structure for some songs
   hawaiian_text?: string;
   english_text?: string;
