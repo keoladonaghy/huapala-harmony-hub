@@ -3,6 +3,7 @@ import { Navigation } from "@/components/ui/navigation";
 import { Dashboard } from "@/components/dashboard/Dashboard";
 import { SongsList } from "@/components/songs/SongsList";
 import { AddEntryForm } from "@/components/forms/AddEntryForm";
+import { PeopleList } from "@/components/people/PeopleList";
 
 const Index = () => {
   const [currentPage, setCurrentPage] = useState("dashboard");
@@ -14,7 +15,7 @@ const Index = () => {
       case "songs":
         return <SongsList />;
       case "artists":
-        return <div className="p-6"><h1 className="text-3xl font-bold">Artists - Coming Soon</h1></div>;
+        return <PeopleList />;
       case "search":
         return <div className="p-6"><h1 className="text-3xl font-bold">Search - Coming Soon</h1></div>;
       case "add":
