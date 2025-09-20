@@ -4,6 +4,7 @@ import { Dashboard } from "@/components/dashboard/Dashboard";
 import { SongsList } from "@/components/songs/SongsList";
 import { AddEntryForm } from "@/components/forms/AddEntryForm";
 import { PeopleList } from "@/components/people/PeopleList";
+import { MeleList } from "@/components/mele/MeleList";
 
 const Index = () => {
   const [currentPage, setCurrentPage] = useState("dashboard");
@@ -13,7 +14,7 @@ const Index = () => {
       case "dashboard":
         return <Dashboard onPageChange={setCurrentPage} />;
       case "songs":
-        return <SongsList />;
+        return <MeleList />;
       case "artists":
         return <PeopleList />;
       case "search":
