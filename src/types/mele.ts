@@ -47,4 +47,12 @@ export interface MeleFormData {
   primary_composer: string;
   translator: string;
   source_file: string;
+  original_file: string;
+  exported_at: string;
+  source: string;
+  processed_at: string;
+  parsing_quality_score: string;
+  total_sections: string;
+  total_lines: string;
+  verses_summary: string; // Brief summary instead of full verse data
 }

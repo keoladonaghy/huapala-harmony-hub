@@ -6,13 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { MeleDetailModal } from "./MeleDetailModal";
-import { Plus, Search, Eye, Music, Languages, User } from "lucide-react";
+import { MeleFormModal } from "./MeleFormModal";
+import { Plus, Search, Eye, Edit2, Music, Languages, User, Calendar, FileText } from "lucide-react";
 
 export function MeleList() {
   const [mele, setMele] = useState<CanonicalMele[]>(realMeleData);
   const [searchTerm, setSearchTerm] = useState("");
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [selectedMele, setSelectedMele] = useState<CanonicalMele | null>(null);
+  const [editingMele, setEditingMele] = useState<CanonicalMele | null>(null);
 
   const filteredMele = mele.filter(song =>
     song.canonical_title_hawaiian.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -29,6 +32,40 @@ export function MeleList() {
   const closeDetailModal = () => {
     setIsDetailModalOpen(false);
     setSelectedMele(null);
+  };
+
+  const openEditModal = (song: CanonicalMele) => {
+    setEditingMele(song);
+    setIsFormModalOpen(true);
+  };
+
+  const openAddModal = () => {
+    setEditingMele(null);
+    setIsFormModalOpen(true);
+  };
+
+  const closeFormModal = () => {
+    setIsFormModalOpen(false);
+    setEditingMele(null);
+  };
+
+  const handleAddMele = (newMele: Omit<CanonicalMele, "canonical_mele_id">) => {
+    const meleData: CanonicalMele = {
+      ...newMele,
+      canonical_mele_id: newMele.canonical_title_hawaiian.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_canonical',
+    };
+    setMele([...mele, meleData]);
+  };
+
+  const handleEditMele = (updatedMele: Omit<CanonicalMele, "canonical_mele_id">) => {
+    if (editingMele) {
+      const meleData: CanonicalMele = {
+        ...updatedMele,
+        canonical_mele_id: editingMele.canonical_mele_id,
+      };
+      setMele(mele.map(m => m.canonical_mele_id === editingMele.canonical_mele_id ? meleData : m));
+      setEditingMele(null);
+    }
   };
 
   const formatComposer = (composer: string) => {
@@ -64,7 +101,7 @@ export function MeleList() {
           <h1 className="text-3xl font-bold text-foreground">Mele Collection</h1>
           <p className="text-muted-foreground">Canonical Hawaiian songs with bilingual lyrics</p>
         </div>
-        <Button onClick={() => {}} className="bg-ocean-deep hover:bg-ocean-deep/90">
+        <Button onClick={openAddModal} className="bg-ocean-deep hover:bg-ocean-deep/90">
           <Plus className="w-4 h-4 mr-2" />
           Add Mele
         </Button>
@@ -99,13 +136,22 @@ export function MeleList() {
                       </p>
                     )}
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => openDetailModal(song)}
-                  >
-                    <Eye className="w-4 h-4" />
-                  </Button>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => openEditModal(song)}
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => openDetailModal(song)}
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -116,16 +162,7 @@ export function MeleList() {
                   </span>
                 </div>
 
-                {song.translator && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Languages className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">
-                      Translated by: {song.translator}
-                    </span>
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-1 mb-3">
                   <Badge variant="outline" className="text-xs">
                     <Music className="w-3 h-3 mr-1" />
                     {verses} verse{verses !== 1 ? 's' : ''}
@@ -140,11 +177,39 @@ export function MeleList() {
                   </Badge>
                 </div>
 
-                {song.processing_metadata && (
-                  <div className="text-xs text-muted-foreground">
-                    Source: {song.source_file}
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-foreground">
+                      {formatComposer(song.primary_composer) || "Unknown"}
+                    </span>
                   </div>
-                )}
+
+                  {song.translator && (
+                    <div className="flex items-center gap-2">
+                      <Languages className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-muted-foreground">
+                        Translated by: {song.translator}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-muted-foreground text-xs">
+                      {song.source_file}
+                    </span>
+                  </div>
+
+                  {song.processing_metadata.processed_at && (
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-muted-foreground text-xs">
+                        Processed: {new Date(song.processing_metadata.processed_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                  )}
+                </div>
 
                 {/* Preview of first verse */}
                 {song.verses[0] && (
@@ -183,6 +248,13 @@ export function MeleList() {
         isOpen={isDetailModalOpen}
         onClose={closeDetailModal}
         mele={selectedMele}
+      />
+
+      <MeleFormModal
+        isOpen={isFormModalOpen}
+        onClose={closeFormModal}
+        onSubmit={editingMele ? handleEditMele : handleAddMele}
+        mele={editingMele}
       />
     </div>
   );
